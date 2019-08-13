@@ -41,14 +41,49 @@ class HBNBCommand(cmd.Cmd):
         try:
             if not arg:
                 raise SyntaxError()
-            my_list = arg.split(" ")
-            obj = eval("{}()".format(my_list[0]))
+            my_class = arg.split(" ")
+            args_line = my_class[1::]
+            if args_line:
+                parameters = self.split_args(args_line)
+                obj = eval("{}(**{})".format(my_class[0], parameters))
+            else:
+                print("HERE")
+                obj = eval("{}()".format(my_class[0]))
             obj.save()
             print("{}".format(obj.id))
         except SyntaxError:
             print("** class name missing **")
         except NameError:
             print("** class doesn't exist **")
+
+    @staticmethod
+    def split_args(a_line):
+        """return a dictionary of key/value pairs from args line"""
+        key, value, line = '', '', ' '
+        key_value = {}
+        storing_key = False
+        storing_value = False
+        for el in a_line:
+            line += el
+            line += " "
+        for char in range(len(line)):
+            if storing_key and line[char] != '=':
+                key += line[char]
+            elif line[char] == '=':
+                storing_key = False
+            elif line[char] == " ":
+                key = ''
+                value = ''
+                storing_key = True
+                storing_value = False
+            if storing_value and line[char] != '"':
+                value += line[char]
+            if storing_value and line[char] == '"' and line[char -1] != '\\':
+                storing_value = False
+                key_value[key] = value
+            elif line[char] == '"' and line[char -1] != '\\':
+                storing_value = True
+        return key_value
 
     def do_show(self, line):
         """Prints the string representation of an instance
