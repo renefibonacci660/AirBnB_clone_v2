@@ -39,49 +39,24 @@ class HBNBCommand(cmd.Cmd):
             NameError: when there is no object taht has the name
         """
         try:
-            if not arg:
+            if arg == "":
                 raise SyntaxError()
-            my_class = arg.split(" ")
-            args_line = my_class[1::]
-            if args_line:
-                parameters = self.split_args(args_line)
-                obj = eval("{}(**{})".format(my_class[0], parameters))
-            else:
-                print("HERE")
-                obj = eval("{}()".format(my_class[0]))
+            list_of_args = arg.split(" ")
+            obj = eval("{}()".format(list_of_args[0]))
+            for key_value in list_of_args[1::]:
+                if '=' not in key_value:
+                    continue
+                key, val = key_value.split('=')
+                val = val.replace('_', ' ')
+                self.do_update("{} {} {} {}".format(list_of_args[0],
+                                                    obj.id, key, val))
+            storage.new(obj)
             obj.save()
             print("{}".format(obj.id))
         except SyntaxError:
             print("** class name missing **")
-        except NameError:
-            print("** class doesn't exist **")
-
-    @staticmethod
-    def split_args(a_line):
-        """return a dictionary of key/value pairs from args line"""
-        key, value, line = '', '', ' '
-        key_value = {}
-        storing_key, storing_value = False, False
-        quotes = ['"', "'"]
-        for el in a_line:
-            line += el
-            line += " "
-        for char in range(len(line)):
-            if storing_key and line[char] != '=':
-                key += line[char]
-            elif line[char] == '=':
-                storing_key = False
-            elif line[char] == " ":
-                key, value = '', ''
-                storing_key, storing_value = True, False
-            if storing_value and line[char] not in quotes:
-                value += line[char]
-            if storing_value and line[char] in quotes and line[char -1] != '\\':
-                storing_value = False
-                key_value[key] = value
-            elif line[char] in quotes and line[char -1] != '\\':
-                storing_value = True
-        return key_value
+        #except NameError:
+         #   print("** class doesn't exist **")
 
     def do_show(self, line):
         """Prints the string representation of an instance
