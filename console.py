@@ -61,8 +61,8 @@ class HBNBCommand(cmd.Cmd):
         """return a dictionary of key/value pairs from args line"""
         key, value, line = '', '', ' '
         key_value = {}
-        storing_key = False
-        storing_value = False
+        storing_key, storing_value = False, False
+        quotes = ['"', "'"]
         for el in a_line:
             line += el
             line += " "
@@ -72,16 +72,14 @@ class HBNBCommand(cmd.Cmd):
             elif line[char] == '=':
                 storing_key = False
             elif line[char] == " ":
-                key = ''
-                value = ''
-                storing_key = True
-                storing_value = False
-            if storing_value and line[char] != '"':
+                key, value = '', ''
+                storing_key, storing_value = True, False
+            if storing_value and line[char] not in quotes:
                 value += line[char]
-            if storing_value and line[char] == '"' and line[char -1] != '\\':
+            if storing_value and line[char] in quotes and line[char -1] != '\\':
                 storing_value = False
                 key_value[key] = value
-            elif line[char] == '"' and line[char -1] != '\\':
+            elif line[char] in quotes and line[char -1] != '\\':
                 storing_value = True
         return key_value
 
