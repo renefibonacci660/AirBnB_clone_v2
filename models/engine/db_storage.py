@@ -44,7 +44,6 @@ class DBStorage:
             else a dictionary of all objects of a given class
         '''
         all_classes = ['User', 'State', 'City', 'Amenity', 'Place', 'Review']
-        all_classes = ['State', 'City']
         obj_dict, obj_list = {}, []
         if cls:
             all_classes = [cls]
