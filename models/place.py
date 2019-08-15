@@ -1,7 +1,10 @@
 #!/usr/bin/python3
 """This is the place class"""
+import models
+from os import getenv
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, ForeignKey, Integer
+from sqlalchemy import Column, String, ForeignKey, Integer, Float, Table
+from sqlalchemy.orm import relationship, backref
 
 
 class Place(BaseModel, Base):
@@ -20,12 +23,10 @@ class Place(BaseModel, Base):
         amenity_ids: list of Amenity ids
     """
     __tablename__ = "places"
-    amenities = relationship("Amenity",
-                             secondary=place_amenity)
 
-    city_id = Column(String(60), nullable=False, ForeignKey("cities.id"))
+    city_id = Column(String(60), ForeignKey("cities.id"), nullable=False)
 
-    user_id = Column(String(60), nullable=False, ForeignKey("users.id"))
+    user_id = Column(String(60), ForeignKey("users.id"), nullable=False)
 
     name = Column(String(128), nullable=False)
 
@@ -45,17 +46,6 @@ class Place(BaseModel, Base):
 
     amenity_ids = []
 
-    place_amenity = Table('place_amenity', Base.metadata,
-                          Column('place_id',
-                                 String(60),
-                                 ForeignKey('places.id'),
-                                 primary_key=True,
-                                 nullable=False),
-                          Column('amenity_id',
-                                 String(60),
-                                 ForeignKey('amenities.id'),
-                                 primary_key=True,
-                                 nullable=False))
     if getenv("HBNB_TYPE_STORAGE") == "db":
         amenities = relationship("Amenity",
                                  secondary="place_amenity",
