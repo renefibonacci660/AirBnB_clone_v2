@@ -18,3 +18,5 @@ class City(BaseModel, Base):
                       nullable=False)
 
     name = Column(String(128), nullable=False)
+
+    places = relationship("Place", backref="cities", cascade="delete")
