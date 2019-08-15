@@ -20,14 +20,59 @@ class Place(BaseModel, Base):
         amenity_ids: list of Amenity ids
     """
     __tablename__ = "places"
+    amenities = relationship("Amenity",
+                             secondary=place_amenity)
+
     city_id = Column(String(60), nullable=False, ForeignKey("cities.id"))
-    user_id = Column(String(60), nullable=False, ForeignKey("user.id"))
+
+    user_id = Column(String(60), nullable=False, ForeignKey("users.id"))
+
     name = Column(String(128), nullable=False)
-    description = Column(String(1024), nullable=False)
+
+    description = Column(String(1024), nullable=True)
+
     number_rooms = Column(Integer, nullable=False, default=0)
+
     number_bathrooms = Column(Integer, nullable=False, default=0)
+
     max_guest = Column(Integer, nullable=False, default=0)
+
     price_by_night = Column(Integer, nullable=False, default=0)
-    latitude = Column(Float, nullable=False)
-    longitude = Column(Float, nullable=False)
+
+    latitude = Column(Float, nullable=True)
+
+    longitude = Column(Float, nullable=True)
+
     amenity_ids = []
+
+    place_amenity = Table('place_amenity', Base.metadata,
+                          Column('place_id',
+                                 String(60),
+                                 ForeignKey('places.id'),
+                                 primary_key=True,
+                                 nullable=False),
+                          Column('amenity_id',
+                                 String(60),
+                                 ForeignKey('amenities.id'),
+                                 primary_key=True,
+                                 nullable=False))
+    if getenv("HBNB_TYPE_STORAGE") == "db":
+        amenities = relationship("Amenity",
+                                 secondary="place_amenity",
+                                 viewonly=False)
+    else:
+        @property
+        def amenities(self):
+            """Returns a list of all the amenities of this Place"""
+            amenities_list = []
+            amenities_dict = models.storage.all(Amenity)
+            for id, key in (self.amenity_ids, amenities_dict):
+                if id in key:
+                    amenities_list.append(amenities_dict[key])
+            return amenities_list
+
+        @amenities.setter
+        def amenities(self, obj):
+            """add an amenity's id to the list of this Place's amenities"""
+            if type(obj).__name__ == Amenity:
+                self.amenity_ids.append(obj.id)
