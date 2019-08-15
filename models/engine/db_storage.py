@@ -44,16 +44,17 @@ class DBStorage:
             else a dictionary of all objects of a given class
         '''
         all_classes = ['User', 'State', 'City', 'Amenity', 'Place', 'Review']
+        all_classes = ['State', 'City']
         obj_dict, obj_list = {}, []
         if cls:
             all_classes = [cls]
-            for each_class in all_classes:
-                if type(cls) == str:
-                    for obj in self.__session.query(eval(each_class)).all():
-                        obj_list.append(obj)
-                else:
-                    for obj in self.__session.query(each_class).all():
-                        obj_list.append(obj)
+        for each_class in all_classes:
+            if type(each_class) == str:
+                for obj in self.__session.query(eval(each_class)).all():
+                    obj_list.append(obj)
+            else:
+                for obj in self.__session.query(each_class).all():
+                    obj_list.append(obj)
         for obj in obj_list:
             obj_dict[type(obj).__name__ + "." + str(obj.id)] = obj
         return obj_dict
