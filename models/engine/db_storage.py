@@ -35,7 +35,7 @@ class DBStorage:
                                       format(user, passwd, host, db),
                                       pool_pre_ping=True)
         ''' Deleting everything we just connected to in self.__engine'''
-        if os.getenv("HBNB_ENV") == "test":
+        if os.getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
@@ -45,13 +45,15 @@ class DBStorage:
         '''
         all_classes = ['User', 'State', 'City', 'Amenity', 'Place', 'Review']
         obj_dict, obj_list = {}, []
-        if cls is None:
+        if cls:
+            all_classes = [cls]
             for each_class in all_classes:
-                for obj in self.__session.query(eval(each_class)):
-                    obj_list.append(obj)
-        else:
-            for obj in self.__session.query(eval(cls)):
-                obj_list.append(obj)
+                if type(cls) == str:
+                    for obj in self.__session.query(eval(each_class)).all():
+                        obj_list.append(obj)
+                else:
+                    for obj in self.__session.query(each_class).all():
+                        obj_list.append(obj)
         for obj in obj_list:
             obj_dict[type(obj).__name__ + "." + str(obj.id)] = obj
         return obj_dict
