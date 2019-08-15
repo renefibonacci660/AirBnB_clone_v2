@@ -22,7 +22,9 @@ class FileStorage:
 
     def delete(self, obj=None):
         '''delete a specific object from __objects'''
-        if obj != None:
+        if obj == None:
+            return
+        else:
             key = ''
             for k, v in self.__objects.items():
                 if obj == v:
