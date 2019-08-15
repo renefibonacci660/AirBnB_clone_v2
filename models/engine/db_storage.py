@@ -44,7 +44,15 @@ class DBStorage:
         def all(self, cls=None):
             '''
             '''
-
-            Session = sessionmaker(bind=engine)
-            session = Session()
-            query = session.query(cls).all()
+            all_classes = ['User', 'State', 'City', 'Amenity', 'Place', 'Review']
+            obj_dict, obj_list = {}, []
+            if cls is None:
+                for each_class in all_classes:
+                    for obj in self.__session.query(eval(each_class)):
+                        obj_list.append(obj)
+            else:
+                for obj in self.__session.query(eval(cls)):
+                    obj_list.append(obj)
+            for obj in obj_list:
+                obj_dict[type(obj).__name__ + "." + str(obj.id)] = obj
+            return obj_dict
