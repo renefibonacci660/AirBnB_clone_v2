@@ -22,7 +22,7 @@ class FileStorage:
 
     def delete(self, obj=None):
         '''delete a specific object from __objects'''
-        if obj == None:
+        if obj is None:
             return
         else:
             key = ''
@@ -36,14 +36,14 @@ class FileStorage:
         Return:
             returns a dictionary of __object
         """
-        if cls != None:
+        if cls is None:
+            return self.__objects
+        else:
             all_cls = {}
             for k, v in self.__objects.items():
                 if type(v) == cls:
                     all_cls[k] = v
             return all_cls
-        else:
-            return self.__objects
 
     def new(self, obj):
         """sets __object to given obj
