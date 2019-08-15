@@ -13,7 +13,4 @@ class Amenity(BaseModel, Base):
     """
     __tablename__ = "amenities"
     name = Column(String(128), nullable=False)
-    cities = relationship("City",
-                          backref="state",
-                          cascade="all, delete-orphan")
     place_amenities = relationship("Place", secondary=place_amenity)
