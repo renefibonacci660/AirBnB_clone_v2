@@ -3,7 +3,7 @@
 
 import os
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import BaseModel, Base
 from models.user import User
 from models.state import State
@@ -30,7 +30,7 @@ class DBStorage:
         host = os.getenv("HBNB_MYSQL_HOST")
         db = os.getenv("HBNB_MYSQL_DB")
 
-        connection = 'mysql+mysqldb://{}:{}@localhost:3306/{}'
+        connection = 'mysql+mysqldb://{}:{}@{}/{}'
         self.__engine = create_engine(connection.
                                       format(user, passwd, host, db),
                                       pool_pre_ping=True)
