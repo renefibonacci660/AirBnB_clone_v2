@@ -43,13 +43,12 @@ class HBNBCommand(cmd.Cmd):
                 raise SyntaxError()
             list_of_args = arg.split(" ")
             obj = eval("{}()".format(list_of_args[0]))
-            for key_value in list_of_args[1::]:
+            for key_value in list_of_args[1:]:
                 if '=' not in key_value:
                     continue
                 key, val = key_value.split('=')
                 val = val.replace('_', ' ')
-                self.do_update("{} {} {} {}".format(list_of_args[0],
-                                                    obj.id, key, val))
+                setattr(obj, key, val)
             storage.new(obj)
             obj.save()
             print("{}".format(obj.id))
