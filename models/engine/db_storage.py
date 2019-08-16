@@ -51,7 +51,6 @@ class DBStorage:
         for each_class in all_classes:
             if type(each_class) == str:
                 for obj in self.__session.query(eval(each_class)).all():
-                    print("HERE")
                     obj_list.append(obj)
             else:
                 for obj in self.__session.query(each_class).all():
