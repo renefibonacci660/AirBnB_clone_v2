@@ -184,29 +184,40 @@ class HBNBCommand(cmd.Cmd):
             AttributeError: when there is no attribute given
             ValueError: when there is no value given
         """
-        if not line:
-            raise SyntaxError()
-        my_list = split(line, " ")
-        if my_list[0] not in self.all_classes:
-            raise NameError()
-        if len(my_list) < 2:
-            raise IndexError()
-        objects = storage.all()
-        key = my_list[0] + '.' + my_list[1]
-        print("KEY: ", key)
-        print("RESULT: ", key in objects)
-        if key not in objects:
-            raise KeyError()
-        if len(my_list) < 3:
-            raise AttributeError()
-        if len(my_list) < 4:
-            raise ValueError()
-        v = objects[key]
         try:
-            v.__dict__[my_list[2]] = eval(my_list[3])
-        except Exception:
-            v.__dict__[my_list[2]] = my_list[3]
-            v.save()
+            if not line:
+                raise SyntaxError()
+            my_list = split(line, " ")
+            if my_list[0] not in self.all_classes:
+                raise NameError()
+            if len(my_list) < 2:
+                raise IndexError()
+            objects = storage.all()
+            key = my_list[0] + '.' + my_list[1]
+            if key not in objects:
+                raise KeyError()
+            if len(my_list) < 3:
+                raise AttributeError()
+            if len(my_list) < 4:
+                raise ValueError()
+            v = objects[key]
+            try:
+                v.__dict__[my_list[2]] = eval(my_list[3])
+            except Exception:
+                v.__dict__[my_list[2]] = my_list[3]
+                v.save()
+        except SyntaxError:
+            print("** class name missing **")
+        except NameError:
+            print("** class doesn't exist **")
+        except IndexError:
+            print("** instance id missing **")
+        except KeyError:
+            print("** no instance found **")
+        except AttributeError:
+            print("** attribute name missing **")
+        except ValueError:
+            print("** value missing **")
 
     def count(self, line):
         """count the number of instances of a class
