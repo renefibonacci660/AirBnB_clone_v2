@@ -48,8 +48,9 @@ class HBNBCommand(cmd.Cmd):
                     continue
                 key, val = key_value.split('=')
                 val = val.replace('_', ' ')
-                self._update("{} {} {} {}".format(list_of_args[0],
-                                                    obj.id, key, val), obj)
+                if '"' in val:
+                    val = val.split('"')[1]
+                setattr(obj, key, val)
             storage.new(obj)
             obj.save()
             print("{}".format(obj.id))
@@ -126,7 +127,7 @@ class HBNBCommand(cmd.Cmd):
         Exceptions:
             NameError: when there is no object taht has the name
         """
-        classes = {"State" : State}
+        classes = {"State": State}
         if line in classes:
             objects = storage.all(classes[line])
         else:
