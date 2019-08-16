@@ -46,7 +46,7 @@ class HBNBCommand(cmd.Cmd):
             for key_value in list_of_args[1::]:
                 if '=' not in key_value:
                     continue
-                key, val = key_value.split('=')
+                key, val = key_value.split('=', 1)
                 val = val.replace('_', ' ')
                 if '"' in val:
                     val = val.split('"')[1]
