@@ -56,7 +56,8 @@ class DBStorage:
                 for obj in self.__session.query(each_class).all():
                     obj_list.append(obj)
         for obj in obj_list:
-            obj_dict[type(obj).__name__ + "." + str(obj.id)] = obj
+            # obj_dict[type(obj).__name__ + "." + str(obj.id)] = obj
+            obj_dict["{}.{}".format(type(obj).__name__, obj.id)] = obj
         return obj_dict
 
     def new(self, obj):
