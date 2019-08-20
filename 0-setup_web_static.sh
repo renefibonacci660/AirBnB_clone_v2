@@ -5,8 +5,8 @@
 apt-get update
 apt-get install nginx
 service nginx start
-mkdir -p /data/webstatic/releases/test
-mkdir -p /data/webstatic/shared
+mkdir -p /data/webstatic/releases/test/
+mkdir -p /data/webstatic/shared/
 touch /data/web_static/releases/test/index.html
 echo "Holberton School" >> /data/web_static/releases/test/index.html
 chown -R ubuntu:ubuntu /data
